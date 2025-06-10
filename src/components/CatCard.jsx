@@ -1,18 +1,20 @@
 import React from 'react';
 import { calculateAge } from '../utils/constants';
+import { useLanguage } from '../context/LanguageContext';
 
 const CatCard = ({ cat, onViewDetail }) => {
   const age = calculateAge(cat.fechaNacimiento);
   const mainPhoto = cat.fotos && cat.fotos.length > 0 ? cat.fotos[0] : null;
+  const { t } = useLanguage();
 
   const getStatusBadges = () => {
     const badges = [];
     
-    if (cat.adoptado) badges.push({ text: 'Adoptado', color: 'bg-green-100 text-green-800' });
-    if (cat.apadrinado) badges.push({ text: 'Apadrinado', color: 'bg-blue-100 text-blue-800' });
-    if (cat.desaparecido) badges.push({ text: 'Desaparecido', color: 'bg-red-100 text-red-800' });
-    if (!cat.testado) badges.push({ text: 'Sin testar', color: 'bg-yellow-100 text-yellow-800' });
-    if (!cat.castrado) badges.push({ text: 'Sin castrar', color: 'bg-orange-100 text-orange-800' });
+    if (cat.adoptado) badges.push({ text: t('catDetail.adopted'), color: 'bg-green-100 text-green-800' });
+    if (cat.apadrinado) badges.push({ text: t('catDetail.sponsored'), color: 'bg-blue-100 text-blue-800' });
+    if (cat.desaparecido) badges.push({ text: t('catDetail.deceased'), color: 'bg-red-100 text-red-800' });
+    if (!cat.testado) badges.push({ text: t('searchFilters.tested') + ': ' + t('searchFilters.no'), color: 'bg-yellow-100 text-yellow-800' });
+    if (!cat.castrado) badges.push({ text: t('searchFilters.neutered') + ': ' + t('searchFilters.no'), color: 'bg-orange-100 text-orange-800' });
     
     return badges;
   };
@@ -40,7 +42,7 @@ const CatCard = ({ cat, onViewDetail }) => {
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
             cat.sexo ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'
           }`}>
-            {cat.sexo ? 'Macho' : 'Hembra'}
+            {cat.sexo ? t('catForm.male') : t('catForm.female')}
           </span>
         </div>
       </div>
@@ -63,15 +65,15 @@ const CatCard = ({ cat, onViewDetail }) => {
         {/* Características principales */}
         <div className="space-y-1 mb-3 text-xs">
           <div className="flex justify-between">
-            <span className="text-gray-500">Testado:</span>
+            <span className="text-gray-500">{t('searchFilters.tested')}:</span>
             <span className={cat.testado ? 'text-green-600' : 'text-red-600'}>
-              {cat.testado ? 'Sí' : 'No'}
+              {cat.testado ? t('searchFilters.yes') : t('searchFilters.no')}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-500">Castrado:</span>
+            <span className="text-gray-500">{t('searchFilters.neutered')}:</span>
             <span className={cat.castrado ? 'text-green-600' : 'text-red-600'}>
-              {cat.castrado ? 'Sí' : 'No'}
+              {cat.castrado ? t('searchFilters.yes') : t('searchFilters.no')}
             </span>
           </div>
         </div>
@@ -100,7 +102,7 @@ const CatCard = ({ cat, onViewDetail }) => {
           onClick={onViewDetail}
           className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 text-sm font-medium"
         >
-          Ver Detalles
+          {t('catList.viewDetails')}
         </button>
       </div>
     </div>

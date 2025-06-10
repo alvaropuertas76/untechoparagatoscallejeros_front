@@ -16,17 +16,24 @@ Aplicación web para la gestión de gatos de la Asociación Protectora de Mallor
 │   │   ├── CatForm.jsx   # Formulario para crear/editar gatos
 │   │   ├── CatList.jsx   # Lista de gatos
 │   │   ├── Dashboard.jsx # Panel principal de la aplicación
+│   │   ├── LanguageSelector.jsx # Selector de idioma con banderas
 │   │   ├── Login.jsx     # Pantalla de inicio de sesión
 │   │   ├── PhotoManager.jsx # Gestor de fotos
 │   │   └── SearchFilters.jsx # Filtros de búsqueda
 │   ├── context/          # Contextos de React
 │   │   ├── AuthContext.jsx # Contexto de autenticación
-│   │   └── CatContext.jsx  # Contexto de datos de gatos
+│   │   ├── CatContext.jsx  # Contexto de datos de gatos
+│   │   └── LanguageContext.jsx # Contexto de idioma
 │   ├── services/         # Servicios
 │   │   ├── catService.js # Servicio de API para gatos
 │   │   └── mockData.js   # Datos de ejemplo
+│   ├── translations/     # Archivos de traducción
+│   │   ├── es.js         # Traducciones en español
+│   │   ├── en.js         # Traducciones en inglés
+│   │   └── de.js         # Traducciones en alemán
 │   ├── utils/            # Utilidades
-│   │   └── constants.js  # Constantes y funciones auxiliares
+│   │   ├── constants.js  # Constantes y funciones auxiliares
+│   │   └── flagIcons.js  # Iconos de banderas en base64
 │   ├── App.jsx           # Componente principal
 │   ├── main.jsx          # Punto de entrada
 │   └── index.css         # Estilos globales (Tailwind)
@@ -44,6 +51,7 @@ Aplicación web para la gestión de gatos de la Asociación Protectora de Mallor
 - **Gestión de fotografías:** subir, ordenar y eliminar fotos
 - **Filtros de búsqueda:** buscar por nombre, sexo, estado, etc.
 - **Interfaz responsive:** diseñada para funcionar en dispositivos móviles y desktop
+- **Multiidioma:** soporte para español, inglés y alemán con selector de banderas
 
 ## Modelo de Datos
 

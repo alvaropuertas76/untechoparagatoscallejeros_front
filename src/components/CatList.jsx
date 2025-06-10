@@ -1,9 +1,11 @@
 import React from 'react';
 import { useCats } from '../context/CatContext';
+import { useLanguage } from '../context/LanguageContext';
 import CatCard from './CatCard';
 
 const CatList = ({ onViewDetail }) => {
   const { filteredCats, loading, setSelectedCat } = useCats();
+  const { t } = useLanguage();
 
   const handleViewDetail = (cat) => {
     setSelectedCat(cat);
@@ -21,8 +23,8 @@ const CatList = ({ onViewDetail }) => {
   if (filteredCats.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-500 text-lg mb-2">No se encontraron gatos</div>
-        <p className="text-gray-400">Prueba ajustando los filtros de búsqueda</p>
+        <div className="text-gray-500 text-lg mb-2">{t('catList.noResults')}</div>
+        <p className="text-gray-400">{t('searchFilters.clearFilters')}</p>
       </div>
     );
   }
@@ -31,7 +33,7 @@ const CatList = ({ onViewDetail }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-900">
-          Gatos Disponibles ({filteredCats.length})
+          {t('catList.title')} ({filteredCats.length})
         </h2>
       </div>
       

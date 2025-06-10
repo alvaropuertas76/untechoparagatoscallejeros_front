@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { CatProvider } from './context/CatContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { useAuth } from './context/AuthContext';
@@ -17,11 +18,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <CatProvider>
-        <AppContent />
-      </CatProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <CatProvider>
+          <AppContent />
+        </CatProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

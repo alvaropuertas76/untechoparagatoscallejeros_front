@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCats } from '../context/CatContext';
+import { useLanguage } from '../context/LanguageContext';
 import SearchFilters from './SearchFilters';
 import CatList from './CatList';
 import CatDetail from './CatDetail';
 import CatForm from './CatForm';
+import LanguageSelector from './LanguageSelector';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const { selectedCat, error, clearError } = useCats();
+  const { t } = useLanguage();
   const [currentView, setCurrentView] = useState('list'); // 'list', 'detail', 'create', 'edit'
 
   const handleViewChange = (view, cat = null) => {
@@ -34,16 +37,14 @@ const Dashboard = () => {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <h1 className="text-2xl font-bold text-gray-900">
-                Gestión de Gatos
+                {t('general.appName')}
               </h1>
-              <span className="text-sm text-gray-500">
-                Asociación Protectora de Mallorca
-              </span>
             </div>
             
             <div className="flex items-center space-x-4">
+              <LanguageSelector />
               <span className="text-sm text-gray-700">
-                Bienvenido, {user?.username}
+                {t('dashboard.welcome')}, {user?.username}
               </span>
               <div className="flex space-x-2">
                 <button
@@ -54,7 +55,7 @@ const Dashboard = () => {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  Lista
+                  {t('catList.title')}
                 </button>
                 <button
                   onClick={() => handleViewChange('create')}
@@ -64,14 +65,14 @@ const Dashboard = () => {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  Añadir Gato
+                  {t('catList.addNew')}
                 </button>
               </div>
               <button
                 onClick={logout}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition text-sm font-medium"
               >
-                Cerrar Sesión
+                {t('general.logout')}
               </button>
             </div>
           </div>

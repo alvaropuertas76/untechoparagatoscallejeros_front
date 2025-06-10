@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useCats } from '../context/CatContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const SearchFilters = () => {
   const { searchCats } = useCats();
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({
     nombre: '',
     sexo: '',
@@ -37,12 +39,12 @@ const SearchFilters = () => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Filtros de Búsqueda</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('searchFilters.title')}</h2>
         <button
           onClick={clearFilters}
           className="text-sm text-indigo-600 hover:text-indigo-800 transition"
         >
-          Limpiar filtros
+          {t('searchFilters.clearFilters')}
         </button>
       </div>
       
@@ -50,14 +52,14 @@ const SearchFilters = () => {
         {/* Nombre */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Nombre
+            {t('searchFilters.name')}
           </label>
           <input
             type="text"
             name="nombre"
             value={filters.nombre}
             onChange={handleInputChange}
-            placeholder="Buscar por nombre..."
+            placeholder={t('searchFilters.namePlaceholder')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           />
         </div>
@@ -65,14 +67,14 @@ const SearchFilters = () => {
         {/* Lugar de recogida */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Lugar de recogida
+            {t('searchFilters.collectionPlace')}
           </label>
           <input
             type="text"
             name="lugarRecogida"
             value={filters.lugarRecogida}
             onChange={handleInputChange}
-            placeholder="Buscar por lugar..."
+            placeholder={t('searchFilters.collectionPlacePlaceholder')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           />
         </div>
@@ -80,7 +82,7 @@ const SearchFilters = () => {
         {/* Sexo */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Sexo
+            {t('searchFilters.sex')}
           </label>
           <select
             name="sexo"
@@ -88,16 +90,16 @@ const SearchFilters = () => {
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           >
-            <option value="">Todos</option>
-            <option value={true}>Macho</option>
-            <option value={false}>Hembra</option>
+            <option value="">{t('searchFilters.all')}</option>
+            <option value={true}>{t('searchFilters.male')}</option>
+            <option value={false}>{t('searchFilters.female')}</option>
           </select>
         </div>
 
         {/* Adoptado */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Estado de adopción
+            {t('searchFilters.adoptionStatus')}
           </label>
           <select
             name="adoptado"
@@ -105,16 +107,16 @@ const SearchFilters = () => {
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           >
-            <option value="">Todos</option>
-            <option value={true}>Adoptado</option>
-            <option value={false}>Disponible</option>
+            <option value="">{t('searchFilters.all')}</option>
+            <option value={true}>{t('searchFilters.adopted')}</option>
+            <option value={false}>{t('searchFilters.available')}</option>
           </select>
         </div>
 
         {/* Testado */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Testado
+            {t('searchFilters.tested')}
           </label>
           <select
             name="testado"
@@ -122,16 +124,16 @@ const SearchFilters = () => {
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           >
-            <option value="">Todos</option>
-            <option value={true}>Sí</option>
-            <option value={false}>No</option>
+            <option value="">{t('searchFilters.all')}</option>
+            <option value={true}>{t('searchFilters.yes')}</option>
+            <option value={false}>{t('searchFilters.no')}</option>
           </select>
         </div>
 
         {/* Castrado */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Castrado
+            {t('searchFilters.neutered')}
           </label>
           <select
             name="castrado"
@@ -139,16 +141,16 @@ const SearchFilters = () => {
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           >
-            <option value="">Todos</option>
-            <option value={true}>Sí</option>
-            <option value={false}>No</option>
+            <option value="">{t('searchFilters.all')}</option>
+            <option value={true}>{t('searchFilters.yes')}</option>
+            <option value={false}>{t('searchFilters.no')}</option>
           </select>
         </div>
 
         {/* Apadrinado */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Apadrinado
+            {t('searchFilters.sponsored')}
           </label>
           <select
             name="apadrinado"
@@ -156,9 +158,9 @@ const SearchFilters = () => {
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
           >
-            <option value="">Todos</option>
-            <option value={true}>Sí</option>
-            <option value={false}>No</option>
+            <option value="">{t('searchFilters.all')}</option>
+            <option value={true}>{t('searchFilters.yes')}</option>
+            <option value={false}>{t('searchFilters.no')}</option>
           </select>
         </div>
       </div>
@@ -167,7 +169,7 @@ const SearchFilters = () => {
       {Object.values(filters).some(value => value !== '') && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex items-center text-sm text-gray-600">
-            <span className="mr-2">Filtros activos:</span>
+            <span className="mr-2">{t('searchFilters.activeFilters')}:</span>
             <div className="flex flex-wrap gap-2">
               {Object.entries(filters)
                 .filter(([key, value]) => value !== '')
@@ -176,7 +178,7 @@ const SearchFilters = () => {
                     key={key}
                     className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs"
                   >
-                    {key}: {typeof value === 'boolean' ? (value ? 'Sí' : 'No') : value}
+                    {key}: {typeof value === 'boolean' ? (value ? t('searchFilters.yes') : t('searchFilters.no')) : value}
                   </span>
                 ))}
             </div>
