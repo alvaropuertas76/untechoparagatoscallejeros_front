@@ -1,0 +1,49 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "elena",
+      "password": "lopez",
+      "nombre": "Elena",
+      "apellidos": "Lopez",
+      "rol": "admin",
+      "email": "elenalopezfernandez76@gmail.com"
+    },
+    {
+      "id": 2,
+      "username": "voluntario1",
+      "password": "vol123",
+      "nombre": "María",
+      "apellidos": "González López",
+      "rol": "voluntario",
+      "email": "maria@example.com"
+    },
+    {
+      "id": 3,
+      "username": "voluntario2",
+      "password": "vol456",
+      "nombre": "Carlos",
+      "apellidos": "Martínez Ruiz",
+      "rol": "voluntario",
+      "email": "carlos@example.com"
+    },
+    {
+      "id": 4,
+      "username": "adopcion",
+      "password": "adop123",
+      "nombre": "Laura",
+      "apellidos": "Fernández Sánchez",
+      "rol": "adopcion",
+      "email": "laura@example.com"
+    },
+    {
+      "id": 5,
+      "username": "veterinario",
+      "password": "vet123",
+      "nombre": "Javier",
+      "apellidos": "Rodríguez Pérez",
+      "rol": "veterinario",
+      "email": "javier@example.com"
+    }
+  ]
+}

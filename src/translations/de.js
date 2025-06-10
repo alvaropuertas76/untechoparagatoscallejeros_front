@@ -14,10 +14,12 @@ export const de = {
   },
   login: {
     title: 'Anmelden',
-    email: 'E-Mail',
+    email: 'Benutzername',
     password: 'Passwort',
     submit: 'Einloggen',
-    error: 'Falsche Anmeldeinformationen'
+    error: 'Falsche Anmeldeinformationen',
+    availableUsers: 'Verfügbare Benutzer',
+    userInfo: 'Benutzername / Passwort'
   },
   dashboard: {
     welcome: 'Willkommen',
@@ -26,7 +28,8 @@ export const de = {
     adoptedCats: 'Adoptierte Katzen',
     pendingCats: 'Ausstehende Katzen',
     actions: 'Aktionen',
-    language: 'Sprache'
+    language: 'Sprache',
+    manageUsers: 'Benutzer verwalten'
   },
   catList: {
     title: 'Katzenliste',
@@ -48,7 +51,38 @@ export const de = {
     deceased: 'Verstorben',
     sponsorship: 'Patenschaft',
     sponsored: 'Gesponsert',
-    notSponsored: 'Nicht gesponsert'
+    notSponsored: 'Nicht gesponsert',
+    confirmDelete: 'Sind Sie sicher, dass Sie diese Katze als verstorben markieren möchten?',
+    noData: 'Keine Katze ausgewählt',
+    markDeceased: 'Als verstorben markieren',
+    startAdoption: 'Adoption starten',
+    adoptionProcessStarted: 'Adoptionsprozess gestartet',
+    age: 'Alter',
+    families: 'Familien',
+    children: 'Kinder',
+    quietHome: 'Ruhiges Zuhause',
+    outdoor: 'Draußen',
+    indoor: 'Drinnen',
+    notSpecified: 'Nicht angegeben',
+    missing: 'Vermisst',
+    deathDate: 'Todesdatum',
+    currentStatus: 'Aktueller Status',
+    characterAndCompatibility: 'Charakter und Kompatibilität',
+    character: 'Charakter',
+    compatibleWith: 'Kompatibel mit',
+    preferredEnvironment: 'Bevorzugte Umgebung',
+    history: 'Geschichte',
+    healthNotes: 'Gesundheitshinweise (Nur für Tierärzte)',
+    noHealthNotes: 'Keine Gesundheitshinweise aufgezeichnet',
+    addHealthNotes: 'Hinweise hinzufügen',
+    addHealthNotesAlert: 'Funktion zum Hinzufügen von Gesundheitshinweisen in Entwicklung',
+    adoptionProcess: 'Adoptionsprozess',
+    alreadyAdopted: 'Diese Katze wurde bereits adoptiert',
+    viewAdoptionDetails: 'Details anzeigen',
+    availableForAdoption: 'Verfügbar für Adoption',
+    manageAdoptions: 'Anträge verwalten',
+    manageAdoptionApplications: 'Funktion zur Verwaltung von Adoptionsanträgen in Entwicklung',
+    viewAdoptionDetails: 'Funktion zur Anzeige von Adoptionsdetails in Entwicklung'
   },
   catForm: {
     newCat: 'Neue Katze',
@@ -67,7 +101,7 @@ export const de = {
     goodWithKids: 'Gut mit Kindern',
     goodWithOtherCats: 'Gut mit anderen Katzen',
     needsQuietHome: 'Benötigt ruhiges Zuhause',
-    indoor: 'Wohnungskatze',
+    indoor: 'Innenhaltung',
     outdoor: 'Freigänger',
     description: 'Beschreibung',
     saveSuccess: 'Katze erfolgreich gespeichert',
@@ -75,7 +109,7 @@ export const de = {
   },
   searchFilters: {
     title: 'Suchfilter',
-    clearFilters: 'Filter zurücksetzen',
+    clearFilters: 'Filter löschen',
     name: 'Name',
     namePlaceholder: 'Nach Namen suchen...',
     collectionPlace: 'Fundort',
@@ -95,12 +129,32 @@ export const de = {
     activeFilters: 'Aktive Filter'
   },
   photoManager: {
-    title: 'Fotoverwaltung',
+    title: 'Fotomanager',
     upload: 'Hochladen',
     delete: 'Löschen',
     setAsMain: 'Als Hauptbild festlegen',
-    dragAndDrop: 'Ziehe deine Fotos hierher',
+    dragAndDrop: 'Ziehen Sie Ihre Fotos hierher',
     or: 'oder',
     browseFiles: 'Dateien durchsuchen'
+  },
+  userManagement: {
+    title: 'Benutzerverwaltung',
+    addUser: 'Benutzer hinzufügen',
+    editUser: 'Benutzer bearbeiten',
+    deleteUser: 'Benutzer löschen',
+    username: 'Benutzername',
+    password: 'Passwort',
+    name: 'Name',
+    surname: 'Nachname',
+    email: 'E-Mail',
+    role: 'Rolle',
+    admin: 'Administrator',
+    volunteer: 'Freiwilliger',
+    adoption: 'Adoption',
+    veterinarian: 'Tierarzt',
+    saveSuccess: 'Benutzer erfolgreich gespeichert',
+    saveError: 'Fehler beim Speichern des Benutzers',
+    confirmDelete: 'Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?',
+    noUsers: 'Keine Benutzer verfügbar'
   }
 };

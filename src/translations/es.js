@@ -11,13 +11,15 @@ export const es = {
     noData: 'No hay datos disponibles',
     search: 'Buscar',
     logout: 'Cerrar sesión'
-  },
+  },  
   login: {
     title: 'Iniciar sesión',
-    email: 'Correo electrónico',
+    email: 'Usuario',
     password: 'Contraseña',
     submit: 'Entrar',
-    error: 'Credenciales incorrectas'
+    error: 'Credenciales incorrectas',
+    availableUsers: 'Usuarios disponibles',
+    userInfo: 'Usuario / Contraseña'
   },
   dashboard: {
     welcome: 'Bienvenido/a',
@@ -26,7 +28,8 @@ export const es = {
     adoptedCats: 'Gatos adoptados',
     pendingCats: 'Gatos pendientes',
     actions: 'Acciones',
-    language: 'Idioma'
+    language: 'Idioma',
+    manageUsers: 'Gestionar Usuarios'
   },
   catList: {
     title: 'Lista de gatos',
@@ -48,7 +51,38 @@ export const es = {
     deceased: 'Fallecido',
     sponsorship: 'Apadrinamiento',
     sponsored: 'Apadrinado',
-    notSponsored: 'No apadrinado'
+    notSponsored: 'No apadrinado',
+    confirmDelete: '¿Estás seguro de que quieres marcar este gato como fallecido?',
+    noData: 'No hay gato seleccionado',
+    markDeceased: 'Marcar Fallecido',
+    startAdoption: 'Iniciar Adopción',
+    adoptionProcessStarted: 'Proceso de adopción iniciado',
+    age: 'Edad',
+    families: 'Familias',
+    children: 'Niños',
+    quietHome: 'Casa tranquila',
+    outdoor: 'Aire libre',
+    indoor: 'Interior',
+    notSpecified: 'No especificado',
+    missing: 'Desaparecido',
+    deathDate: 'Fecha fallecimiento',
+    currentStatus: 'Estado Actual',
+    characterAndCompatibility: 'Carácter y Compatibilidad',
+    character: 'Carácter',
+    compatibleWith: 'Compatible con',
+    preferredEnvironment: 'Entorno preferido',
+    history: 'Historia',
+    healthNotes: 'Notas de salud (Solo personal veterinario)',
+    noHealthNotes: 'No hay notas de salud registradas',
+    addHealthNotes: 'Añadir notas',
+    addHealthNotesAlert: 'Función para añadir notas de salud en desarrollo',
+    adoptionProcess: 'Proceso de adopción',
+    alreadyAdopted: 'Este gato ya ha sido adoptado',
+    viewAdoptionDetails: 'Ver detalles',
+    availableForAdoption: 'Disponible para adopción',
+    manageAdoptions: 'Gestionar solicitudes',
+    manageAdoptionApplications: 'Función para gestionar solicitudes de adopción en desarrollo',
+    viewAdoptionDetails: 'Función para ver detalles de adopción en desarrollo'
   },
   catForm: {
     newCat: 'Nuevo gato',
@@ -102,5 +136,25 @@ export const es = {
     dragAndDrop: 'Arrastra y suelta tus fotos aquí',
     or: 'o',
     browseFiles: 'Buscar archivos'
+  },
+  userManagement: {
+    title: 'Gestión de Usuarios',
+    addUser: 'Añadir Usuario',
+    editUser: 'Editar Usuario',
+    deleteUser: 'Eliminar Usuario',
+    username: 'Nombre de usuario',
+    password: 'Contraseña',
+    name: 'Nombre',
+    surname: 'Apellidos',
+    email: 'Correo electrónico',
+    role: 'Rol',
+    admin: 'Administrador',
+    volunteer: 'Voluntario',
+    adoption: 'Adopción',
+    veterinarian: 'Veterinario',
+    saveSuccess: 'Usuario guardado correctamente',
+    saveError: 'Error al guardar el usuario',
+    confirmDelete: '¿Estás seguro de que quieres eliminar este usuario?',
+    noUsers: 'No hay usuarios disponibles'
   }
 };

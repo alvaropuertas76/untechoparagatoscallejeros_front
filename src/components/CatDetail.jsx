@@ -2,19 +2,23 @@ import React from 'react';
 import { useCats } from '../context/CatContext';
 import { calculateAge, formatDate } from '../utils/constants';
 import PhotoManager from './PhotoManager';
+import RequirePermission, { usePermissions } from './RequirePermission';
+import { useLanguage } from '../context/LanguageContext';
 
 const CatDetail = ({ onEdit, onBack }) => {
   const { selectedCat, deleteCat } = useCats();
+  const { hasPermission } = usePermissions();
+  const { t } = useLanguage();
 
   if (!selectedCat) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No hay gato seleccionado</p>
+        <p className="text-gray-500">{t('catDetail.noData')}</p>
         <button
           onClick={onBack}
           className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
         >
-          Volver a la lista
+          {t('general.back')}
         </button>
       </div>
     );
@@ -24,7 +28,7 @@ const CatDetail = ({ onEdit, onBack }) => {
   const age = calculateAge(cat.fechaNacimiento);
 
   const handleDelete = async () => {
-    if (window.confirm('¿Estás seguro de que quieres marcar este gato como fallecido?')) {
+    if (window.confirm(t('catDetail.confirmDelete'))) {
       try {
         await deleteCat(cat.id);
         onBack();
@@ -36,17 +40,17 @@ const CatDetail = ({ onEdit, onBack }) => {
 
   const getCompatibilityInfo = () => {
     const compatibility = [];
-    if (cat.familia) compatibility.push('Familias');
-    if (cat.compatibleNinos) compatibility.push('Niños');
-    if (cat.casaTranquila) compatibility.push('Casa tranquila');
-    return compatibility.length > 0 ? compatibility.join(', ') : 'No especificado';
+    if (cat.familia) compatibility.push(t('catDetail.families'));
+    if (cat.compatibleNinos) compatibility.push(t('catDetail.children'));
+    if (cat.casaTranquila) compatibility.push(t('catDetail.quietHome'));
+    return compatibility.length > 0 ? compatibility.join(', ') : t('catDetail.notSpecified');
   };
 
   const getEnvironmentInfo = () => {
     const environment = [];
-    if (cat.gatoAireLibre) environment.push('Aire libre');
-    if (cat.gatoInterior) environment.push('Interior');
-    return environment.length > 0 ? environment.join(', ') : 'No especificado';
+    if (cat.gatoAireLibre) environment.push(t('catDetail.outdoor'));
+    if (cat.gatoInterior) environment.push(t('catDetail.indoor'));
+    return environment.length > 0 ? environment.join(', ') : t('catDetail.notSpecified');
   };
 
   return (
@@ -61,61 +65,79 @@ const CatDetail = ({ onEdit, onBack }) => {
             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Volver
+            {t('general.back')}
           </button>
           <h1 className="text-3xl font-bold text-gray-900">{cat.nombre}</h1>
         </div>
         
         <div className="flex space-x-3">
-          <button
-            onClick={onEdit}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
-          >
-            Editar
-          </button>
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-          >
-            Marcar Fallecido
-          </button>
+          <RequirePermission permission="canEdit">
+            <button
+              onClick={onEdit}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+            >
+              {t('general.edit')}
+            </button>
+          </RequirePermission>
+          
+          <RequirePermission permission="canDelete">
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+            >
+              {t('catDetail.markDeceased')}
+            </button>
+          </RequirePermission>
+          
+          <RequirePermission permission="canAdopt">
+            <button
+              onClick={() => alert(t('catDetail.adoptionProcessStarted'))}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            >
+              {t('catDetail.startAdoption')}
+            </button>
+          </RequirePermission>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Columna izquierda - Fotos */}
         <div className="lg:col-span-1">
-          <PhotoManager catId={cat.id} photos={cat.fotos || []} readOnly />
+          <PhotoManager 
+            catId={cat.id} 
+            photos={cat.fotos || []} 
+            readOnly={!hasPermission('canManagePhotos')} 
+          />
         </div>
 
         {/* Columna derecha - Información */}
         <div className="lg:col-span-2 space-y-6">
           {/* Información básica */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Información Básica</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.basicInfo')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-500">Nombre</label>
+                <label className="block text-sm font-medium text-gray-500">{t('catForm.name')}</label>
                 <p className="mt-1 text-sm text-gray-900">{cat.nombre}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-500">Edad</label>
+                <label className="block text-sm font-medium text-gray-500">{t('catDetail.age')}</label>
                 <p className="mt-1 text-sm text-gray-900">{age}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-500">Sexo</label>
-                <p className="mt-1 text-sm text-gray-900">{cat.sexo ? 'Macho' : 'Hembra'}</p>
+                <label className="block text-sm font-medium text-gray-500">{t('catForm.sex')}</label>
+                <p className="mt-1 text-sm text-gray-900">{cat.sexo ? t('catForm.male') : t('catForm.female')}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-500">Lugar de recogida</label>
+                <label className="block text-sm font-medium text-gray-500">{t('catForm.collectionPlace')}</label>
                 <p className="mt-1 text-sm text-gray-900">{cat.lugarRecogida}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-500">Fecha de nacimiento</label>
+                <label className="block text-sm font-medium text-gray-500">{t('catForm.birthDate')}</label>
                 <p className="mt-1 text-sm text-gray-900">{formatDate(cat.fechaNacimiento)}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-500">Año de llegada</label>
+                <label className="block text-sm font-medium text-gray-500">{t('catForm.arrivalYear')}</label>
                 <p className="mt-1 text-sm text-gray-900">{formatDate(cat.anoLlegada)}</p>
               </div>
             </div>
@@ -123,83 +145,135 @@ const CatDetail = ({ onEdit, onBack }) => {
 
           {/* Estado de salud */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Estado de Salud</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.healthInfo')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 mr-3">Testado:</span>
+                <span className="text-sm font-medium text-gray-500 mr-3">{t('catForm.tested')}:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   cat.testado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 }`}>
-                  {cat.testado ? 'Sí' : 'No'}
+                  {cat.testado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 mr-3">Castrado:</span>
+                <span className="text-sm font-medium text-gray-500 mr-3">{t('catForm.neutered')}:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   cat.castrado ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 }`}>
-                  {cat.castrado ? 'Sí' : 'No'}
+                  {cat.castrado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
               </div>
+              
+              {/* Sección de información de salud adicional solo visible para veterinarios */}
+              <RequirePermission permission="canManageHealth">
+                <div className="col-span-2 mt-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded p-4">
+                    <h3 className="text-sm font-bold text-blue-800 mb-2">{t('catDetail.healthNotes')}</h3>
+                    {cat.notasSalud ? (
+                      <p className="text-sm text-blue-700">{cat.notasSalud}</p>
+                    ) : (
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-blue-700">{t('catDetail.noHealthNotes')}</p>
+                        <button 
+                          className="text-xs px-2 py-1 bg-blue-600 text-white rounded"
+                          onClick={() => alert(t('catDetail.addHealthNotesAlert'))}
+                        >
+                          {t('catDetail.addHealthNotes')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </RequirePermission>
             </div>
           </div>
 
           {/* Estado actual */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Estado Actual</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.currentStatus')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 mr-3">Adoptado:</span>
+                <span className="text-sm font-medium text-gray-500 mr-3">{t('catDetail.adopted')}:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   cat.adoptado ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                 }`}>
-                  {cat.adoptado ? 'Sí' : 'No'}
+                  {cat.adoptado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 mr-3">Apadrinado:</span>
+                <span className="text-sm font-medium text-gray-500 mr-3">{t('catDetail.sponsored')}:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   cat.apadrinado ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
                 }`}>
-                  {cat.apadrinado ? 'Sí' : 'No'}
+                  {cat.apadrinado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-500 mr-3">Desaparecido:</span>
+                <span className="text-sm font-medium text-gray-500 mr-3">{t('catDetail.missing')}:</span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   cat.desaparecido ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
                 }`}>
-                  {cat.desaparecido ? 'Sí' : 'No'}
+                  {cat.desaparecido ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
               </div>
               {cat.fechaFallecido && (
                 <div className="flex items-center">
-                  <span className="text-sm font-medium text-gray-500 mr-3">Fecha fallecimiento:</span>
+                  <span className="text-sm font-medium text-gray-500 mr-3">{t('catDetail.deathDate')}:</span>
                   <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                     {formatDate(cat.fechaFallecido)}
                   </span>
                 </div>
               )}
+              
+              {/* Controles de adopción - solo para usuarios con permisos de adopción */}
+              <RequirePermission permission="canApproveAdoptions">
+                <div className="col-span-2 mt-4">
+                  <div className="bg-green-50 border border-green-200 rounded p-4">
+                    <h3 className="text-sm font-bold text-green-800 mb-2">{t('catDetail.adoptionProcess')}</h3>
+                    {cat.adoptado ? (
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-green-700">{t('catDetail.alreadyAdopted')}</p>
+                        <button 
+                          className="text-xs px-2 py-1 bg-yellow-600 text-white rounded"
+                          onClick={() => alert(t('catDetail.viewAdoptionDetails'))}
+                        >
+                          {t('catDetail.viewAdoptionDetails')}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-green-700">{t('catDetail.availableForAdoption')}</p>
+                        <button 
+                          className="text-xs px-2 py-1 bg-green-600 text-white rounded"
+                          onClick={() => alert(t('catDetail.manageAdoptionApplications'))}
+                        >
+                          {t('catDetail.manageAdoptions')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </RequirePermission>
             </div>
           </div>
 
           {/* Carácter y compatibilidad */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Carácter y Compatibilidad</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.characterAndCompatibility')}</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-500 mb-2">Carácter</label>
+                <label className="block text-sm font-medium text-gray-500 mb-2">{t('catDetail.character')}</label>
                 <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
-                  {cat.caracter || 'No especificado'}
+                  {cat.caracter || t('catDetail.notSpecified')}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-500">Compatible con</label>
+                  <label className="block text-sm font-medium text-gray-500">{t('catDetail.compatibleWith')}</label>
                   <p className="mt-1 text-sm text-gray-900">{getCompatibilityInfo()}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-500">Entorno preferido</label>
+                  <label className="block text-sm font-medium text-gray-500">{t('catDetail.preferredEnvironment')}</label>
                   <p className="mt-1 text-sm text-gray-900">{getEnvironmentInfo()}</p>
                 </div>
               </div>
@@ -209,7 +283,7 @@ const CatDetail = ({ onEdit, onBack }) => {
           {/* Historia */}
           {cat.historia && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Historia</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.history')}</h2>
               <p className="text-sm text-gray-900 bg-gray-50 p-4 rounded-md leading-relaxed">
                 {cat.historia}
               </p>

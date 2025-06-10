@@ -14,10 +14,12 @@ export const en = {
   },
   login: {
     title: 'Login',
-    email: 'Email',
+    email: 'Username',
     password: 'Password',
     submit: 'Sign in',
-    error: 'Incorrect credentials'
+    error: 'Incorrect credentials',
+    availableUsers: 'Available users',
+    userInfo: 'Username / Password'
   },
   dashboard: {
     welcome: 'Welcome',
@@ -26,7 +28,8 @@ export const en = {
     adoptedCats: 'Adopted cats',
     pendingCats: 'Pending cats',
     actions: 'Actions',
-    language: 'Language'
+    language: 'Language',
+    manageUsers: 'Manage Users'
   },
   catList: {
     title: 'Cat List',
@@ -48,7 +51,38 @@ export const en = {
     deceased: 'Deceased',
     sponsorship: 'Sponsorship',
     sponsored: 'Sponsored',
-    notSponsored: 'Not sponsored'
+    notSponsored: 'Not sponsored',
+    confirmDelete: 'Are you sure you want to mark this cat as deceased?',
+    noData: 'No cat selected',
+    markDeceased: 'Mark as Deceased',
+    startAdoption: 'Start Adoption',
+    adoptionProcessStarted: 'Adoption process started',
+    age: 'Age',
+    families: 'Families',
+    children: 'Children',
+    quietHome: 'Quiet home',
+    outdoor: 'Outdoor',
+    indoor: 'Indoor',
+    notSpecified: 'Not specified',
+    missing: 'Missing',
+    deathDate: 'Death date',
+    currentStatus: 'Current Status',
+    characterAndCompatibility: 'Character and Compatibility',
+    character: 'Character',
+    compatibleWith: 'Compatible with',
+    preferredEnvironment: 'Preferred environment',
+    history: 'History',
+    healthNotes: 'Health notes (Veterinary staff only)',
+    noHealthNotes: 'No health notes recorded',
+    addHealthNotes: 'Add notes',
+    addHealthNotesAlert: 'Health notes adding function in development',
+    adoptionProcess: 'Adoption process',
+    alreadyAdopted: 'This cat has already been adopted',
+    viewAdoptionDetails: 'View details',
+    availableForAdoption: 'Available for adoption',
+    manageAdoptions: 'Manage applications',
+    manageAdoptionApplications: 'Adoption applications management function in development',
+    viewAdoptionDetails: 'Adoption details viewing function in development'
   },
   catForm: {
     newCat: 'New Cat',
@@ -102,5 +136,25 @@ export const en = {
     dragAndDrop: 'Drag and drop your photos here',
     or: 'or',
     browseFiles: 'Browse files'
+  },
+  userManagement: {
+    title: 'User Management',
+    addUser: 'Add User',
+    editUser: 'Edit User',
+    deleteUser: 'Delete User',
+    username: 'Username',
+    password: 'Password',
+    name: 'Name',
+    surname: 'Surname',
+    email: 'Email',
+    role: 'Role',
+    admin: 'Administrator',
+    volunteer: 'Volunteer',
+    adoption: 'Adoption',
+    veterinarian: 'Veterinarian',
+    saveSuccess: 'User saved successfully',
+    saveError: 'Error saving user',
+    confirmDelete: 'Are you sure you want to delete this user?',
+    noUsers: 'No users available'
   }
 };
