@@ -4,6 +4,8 @@ Aplicación web para la gestión de gatos de la Asociación Protectora de Mallor
 
 > **NOTA IMPORTANTE**: Actualmente la aplicación está usando datos mock mientras se completa la integración con Supabase. Ver [MOCK_INTEGRATION.md](./MOCK_INTEGRATION.md) para más detalles.
 
+> **DESPLIEGUE**: La aplicación está configurada para ser desplegada en GitHub Pages. Consulta [GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md) para obtener instrucciones detalladas.
+
 ## Estructura del Proyecto
 
 ```
