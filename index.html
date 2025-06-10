@@ -5,11 +5,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestión de Gatos - Asociación Protectora Mallorca</title>
+  <!-- Script para manejar rutas SPA en GitHub Pages -->
+  <script type="text/javascript">
+    // Esta solución permite manejar las rutas en GitHub Pages para aplicaciones SPA
+    (function() {
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect != location.href) {
+        history.replaceState(null, null, redirect);
+      }
+      
+      // Manejo del parámetro 'p' para redirecciones desde 404.html
+      var l = location;
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function(v) {
+          var a = v.split('=');
+          q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+        });
+        if (q.p !== undefined) {
+          window.history.replaceState(null, null,
+            (q.p || '') +
+            (q.q ? ('?' + q.q) : '') +
+            l.hash
+          );
+        }
+      }
+    }());
+  </script>
+  <script type="module" crossorigin src="/untechoparagatoscallejeros_front/assets/index-CXe8V3LZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/untechoparagatoscallejeros_front/assets/index-D8KeXh5K.css">
 </head>
 
 <body>
   <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
