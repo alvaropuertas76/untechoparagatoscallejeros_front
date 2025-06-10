@@ -18,18 +18,22 @@ Aplicación web para la gestión de gatos de la Asociación Protectora de Mallor
 │   │   ├── Dashboard.jsx # Panel principal de la aplicación
 │   │   ├── LanguageSelector.jsx # Selector de idioma con banderas
 │   │   ├── Login.jsx     # Pantalla de inicio de sesión
+│   │   ├── TestLoginComponent.jsx # Componente para probar login
 │   │   ├── PhotoManager.jsx # Gestor de fotos
 │   │   └── SearchFilters.jsx # Filtros de búsqueda
 │   ├── context/          # Contextos de React
 │   │   ├── AuthContext.jsx # Contexto de autenticación
 │   │   ├── CatContext.jsx  # Contexto de datos de gatos
 │   │   └── LanguageContext.jsx # Contexto de idioma
-│   ├── database/         # Configuración y scripts de base de datos
-│   │   ├── db.js         # Configuración de conexión a PostgreSQL
-│   │   ├── schema.sql    # Definición del esquema de la base de datos
-│   │   └── seed.sql      # Datos iniciales para la base de datos
+│   ├── database/         # Scripts de base de datos para Supabase
+│   │   ├── configurar_rls_manual.sql # Políticas RLS para Supabase
+│   │   ├── configurarRLS.js # Script para configurar RLS
+│   │   ├── consultarUsuario.js # Script para consultar usuario específico
+│   │   ├── listarUsuarios.js # Script para listar usuarios
+│   │   └── crearUsuarioElena.js # Script para crear usuario de prueba
 │   ├── services/         # Servicios
 │   │   ├── catService.js # Servicio de API para gatos
+│   │   ├── supabaseClient.js # Cliente de conexión a Supabase
 │   │   └── userService.js # Servicio de API para usuarios
 │   ├── translations/     # Archivos de traducción
 │   │   ├── es.js         # Traducciones en español
@@ -63,9 +67,9 @@ Aplicación web para la gestión de gatos de la Asociación Protectora de Mallor
 
 ## Modelo de Datos
 
-La aplicación utiliza una base de datos PostgreSQL con las siguientes tablas principales:
+La aplicación utiliza Supabase (PostgreSQL en la nube) con las siguientes tablas principales:
 
-### Tabla `users`
+### Tabla `user`
 Almacena la información de los usuarios de la aplicación:
 - **id**: Identificador único del usuario
 - **username**: Nombre de usuario para iniciar sesión
@@ -74,8 +78,7 @@ Almacena la información de los usuarios de la aplicación:
 - **apellidos**: Apellidos del usuario
 - **rol**: Rol del usuario (admin, voluntario, adopcion, veterinario)
 - **email**: Correo electrónico del usuario
-- **created_at**: Fecha de creación del registro
-- **updated_at**: Fecha de última actualización
+
 
 ### Tabla `cats`
 Almacena la información principal de cada gato:
@@ -99,66 +102,73 @@ Almacena la información principal de cada gato:
 - **fecha_fallecido**: Fecha de fallecimiento (si aplica)
 - **ano_llegada**: Año de llegada a la asociación
 - **notas_salud**: Notas sobre la salud del gato
-- **created_at**: Fecha de creación del registro
-- **updated_at**: Fecha de última actualización
 
-### Tabla `cat_photos`
-Almacena las fotos asociadas a cada gato:
-- **id**: Identificador único de la foto
-- **cat_id**: ID del gato al que pertenece la foto
-- **url**: URL de la foto
-- **es_principal**: Indica si es la foto principal del gato
-- **created_at**: Fecha de creación del registro
+
 
 ## API REST
 
-La aplicación incluye un servidor API basado en Express que proporciona los siguientes endpoints:
+La aplicación incluye servicios que utilizan el cliente de Supabase para proporcionar los siguientes endpoints:
 
 ### Autenticación
-- `POST /api/login` - Iniciar sesión con nombre de usuario y contraseña
+- Login con nombre de usuario y contraseña a través de Supabase
 
 ### Usuarios
-- `GET /api/users` - Obtener lista de usuarios (requiere autenticación)
+- Obtener lista de usuarios (requiere autenticación)
+- Crear, actualizar y eliminar usuarios (requiere rol de administrador)
 
 ### Gatos
-- `GET /api/cats` - Obtener lista de gatos con filtros opcionales (nombre, sexo, adoptado, lugarRecogida)
-- `GET /api/cats/:id` - Obtener detalles de un gato específico
-- `POST /api/cats` - Crear un nuevo gato
-- `PUT /api/cats/:id` - Actualizar información de un gato existente
-- `DELETE /api/cats/:id` - Marcar un gato como fallecido (no elimina el registro)
+- Obtener lista de gatos con filtros opcionales (nombre, sexo, adoptado, lugarRecogida)
+- Obtener detalles de un gato específico
+- Crear un nuevo gato
+- Actualizar información de un gato existente
+- Marcar un gato como fallecido (no elimina el registro)
 
-La API utiliza transacciones para operaciones complejas como la creación o actualización de gatos que incluyen gestión de fotos, garantizando la integridad de los datos.
+Los servicios utilizan Supabase para garantizar la integridad de los datos y el control de acceso mediante políticas de Row Level Security (RLS).
 
-## Configuración de la Base de Datos
+## Configuración de Supabase
 
-Para configurar la base de datos PostgreSQL, consulte el archivo `DATABASE_SETUP.md` que contiene instrucciones detalladas sobre:
+Para configurar la conexión con Supabase, se necesitan los siguientes pasos:
 
-1. Instalación de PostgreSQL
-2. Creación de la base de datos
-3. Configuración de variables de entorno
-4. Ejecución de scripts de creación de tablas e inserción de datos iniciales
-5. Verificación de la instalación
-6. Solución de problemas comunes
+1. **Crear una cuenta y proyecto en Supabase**
+   - Registrarse en [Supabase](https://supabase.com/)
+   - Crear un nuevo proyecto
+   - Obtener la URL y la API Key del proyecto
 
-## Integración con Supabase
+2. **Configurar variables de entorno**
+   - Crear un archivo `.env` en la raíz del proyecto con:
+   ```
+   VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+   VITE_SUPABASE_KEY=tu-api-key
+   ```
 
-La aplicación ahora está integrada con Supabase, una plataforma de base de datos PostgreSQL en la nube. Esta integración proporciona:
+3. **Configurar Row Level Security (RLS)**
+   - Ejecutar el script: `npm run supabase:configurar-rls`
+   - O seguir las instrucciones en `SUPABASE_LOGIN.md`
 
-- Base de datos PostgreSQL gestionada en la nube
-- Acceso a los datos desde cualquier lugar
-- Potencial para utilizar características adicionales como autenticación, almacenamiento y funciones en tiempo real
+4. **Verificar la configuración**
+   - Ejecutar: `npm run supabase:test-connection`
+   - Comprobar que se puede acceder a los datos con: `npm run supabase:listar-usuarios`
 
-Para más detalles sobre la integración con Supabase, consulte el archivo `SUPABASE_INTEGRATION.md`.
+Para instrucciones más detalladas, consulte:
+- `SUPABASE_INTEGRATION.md` - Guía completa de integración
+- `SUPABASE_LOGIN.md` - Implementación del sistema de login
+- `GUIA_EXEC_SQL.md` - Configuración de funciones SQL personalizadas
 
 ## Scripts Disponibles
 - `npm install` - Instalar dependencias
 - `npm run dev` - Iniciar servidor de desarrollo frontend
-- `npm run server` - Iniciar servidor API
-- `npm run dev:full` - Iniciar simultáneamente el servidor frontend y la API
-- `npm run db:setup` - Configurar y poblar la base de datos local
-- `npm run supabase:upload-users` - Cargar usuarios a Supabase
 - `npm run build` - Construir la aplicación para producción
 - `npm run lint` - Ejecutar linter en archivos fuente
+
+### Scripts de Supabase
+- `npm run supabase:create-tables` - Crear tablas en Supabase
+- `npm run supabase:direct-sql` - Ejecutar SQL directo en Supabase
+- `npm run supabase:configurar-rls` - Configurar políticas RLS
+- `npm run supabase:listar-usuarios` - Listar todos los usuarios
+- `npm run supabase:consultar-usuario` - Consultar usuario específico
+- `npm run supabase:crear-usuario-elena` - Crear usuario de prueba
+- `npm run supabase:test-login` - Probar login con Supabase
+- `npm run supabase:upload-users` - Cargar usuarios a Supabase
 
 ### Solución de problemas
 
@@ -177,9 +187,7 @@ Si encuentras el error "vite no se reconoce como un comando interno o externo", 
 - React
 - Vite
 - TailwindCSS
-- PostgreSQL (Supabase)
-- Express
-- Node.js
+- Supabase (PostgreSQL en la nube)
+- Context API para gestión de estado
 - ESLint
 - JavaScript
-- Supabase (Base de datos en la nube)

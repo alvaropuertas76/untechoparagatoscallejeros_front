@@ -2,6 +2,8 @@
 
 ## Información Importante
 
+**La aplicación "Un Techo Para Gatos Callejeros" ya no utiliza PostgreSQL local.**
+
 Este proyecto ha migrado de PostgreSQL local a **Supabase**, una plataforma de base de datos PostgreSQL en la nube.
 
 ## Nuevas Instrucciones
@@ -31,5 +33,4 @@ npm run supabase:test-connection
 
 ---
 
-**Nota**: La configuración original de PostgreSQL local se ha movido a `DATABASE_SETUP_OLD.md` y se mantiene como referencia histórica.
-
+**Nota**: Este archivo se mantiene como referencia histórica. La información sobre la configuración de PostgreSQL local ya no es aplicable a la versión actual del proyecto.
