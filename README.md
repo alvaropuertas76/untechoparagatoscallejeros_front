@@ -2,6 +2,8 @@
 
 Aplicación web para la gestión de gatos de la Asociación Protectora de Mallorca. Esta herramienta permite administrar la información de los gatos rescatados, incluyendo su estado, características y seguimiento.
 
+> **NOTA IMPORTANTE**: Actualmente la aplicación está usando datos mock mientras se completa la integración con Supabase. Ver [MOCK_INTEGRATION.md](./MOCK_INTEGRATION.md) para más detalles.
+
 ## Estructura del Proyecto
 
 ```
