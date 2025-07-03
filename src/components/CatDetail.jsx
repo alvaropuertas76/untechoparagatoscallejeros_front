@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCats } from '../context/CatContext';
 import { calculateAge, formatDate } from '../utils/constants';
 import PhotoManager from './PhotoManager';
@@ -6,10 +6,17 @@ import RequirePermission, { usePermissions } from './RequirePermission';
 import { useLanguage } from '../context/LanguageContext';
 
 const CatDetail = ({ onEdit, onBack }) => {
-  const { selectedCat, deleteCat } = useCats();
+  const { selectedCat, deleteCat, loadCatById } = useCats();
   const { hasPermission } = usePermissions();
-  const languageContext = useLanguage();
-  const t = languageContext?.t || (key => key);
+  const { t } = useLanguage();
+
+  // Recarga los datos del gato cuando se muestra el detalle
+  useEffect(() => {
+    if (selectedCat && selectedCat.id) {
+      loadCatById(selectedCat.id)
+        .catch(error => console.error('Error recargando el gato:', error));
+    }
+  }, [selectedCat?.id]);
 
   if (!selectedCat) {
     return (
@@ -80,50 +87,22 @@ const CatDetail = ({ onEdit, onBack }) => {
               {t('general.edit')}
             </button>
           </RequirePermission>
-          
-          <RequirePermission permission="canDelete">
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-            >
-              {t('catDetail.markDeceased')}
-            </button>
-          </RequirePermission>
-          
-          <RequirePermission permission="canAdopt">
-            <button
-              onClick={() => alert(t('catDetail.adoptionProcessStarted'))}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-            >
-              {t('catDetail.startAdoption')}
-            </button>
-          </RequirePermission>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Sección de fotos - Carrusel grande */}
-        <div className="w-full">
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.photos')}</h2>
-            <div className="max-w-3xl mx-auto">
-              <PhotoManager 
-                catId={cat.id} 
-                catName={cat.nombre}
-                photos={cat.fotos || []} 
-                readOnly={!hasPermission('canManagePhotos')} 
-              />
-              {cat.fotos && cat.fotos.length > 0 && (
-                <p className="text-sm text-gray-500 mt-2 text-center">
-                  {cat.fotos.length} {cat.fotos.length === 1 ? t('catDetail.photo') : t('catDetail.photos')}
-                </p>
-              )}
-            </div>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Columna izquierda - Fotos */}
+        <div className="lg:col-span-1">
+          <PhotoManager 
+            catId={cat.id} 
+            catName={cat.nombre}
+            photos={cat.fotos || []} 
+            readOnly={!hasPermission('canManagePhotos')} 
+          />
         </div>
 
-        {/* Información - Grid de dos columnas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Columna derecha - Información */}
+        <div className="lg:col-span-2 space-y-6">
           {/* Información básica */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.basicInfo')}</h2>
@@ -174,7 +153,8 @@ const CatDetail = ({ onEdit, onBack }) => {
                 }`}>
                   {cat.castrado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
-              </div> 
+              </div>
+              
             </div>
           </div>
 
@@ -214,7 +194,8 @@ const CatDetail = ({ onEdit, onBack }) => {
                   </span>
                 </div>
               )}
-
+              
+              
             </div>
           </div>
 

@@ -178,6 +178,24 @@ export const CatProvider = ({ children }) => {
     }
   };
 
+  // Cargar un gato por ID (para obtener datos actualizados)
+  const loadCatById = async (id) => {
+    try {
+      setLoading(true);
+      console.log(`Cargando datos actualizados del gato con ID ${id}`);
+      const updatedCat = await catService.getCatById(id);
+      console.log('Datos actualizados recibidos:', updatedCat);
+      setSelectedCat(updatedCat);
+      return updatedCat;
+    } catch (err) {
+      console.error(`Error cargando el gato con ID ${id}:`, err);
+      setError(`Error cargando el gato con ID ${id}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     cats,
     filteredCats,
@@ -190,6 +208,7 @@ export const CatProvider = ({ children }) => {
     deleteCat,
     searchCats,
     loadCats,
+    loadCatById, // Agregado el nuevo método aquí
     clearError: () => setError(null),
   };
 

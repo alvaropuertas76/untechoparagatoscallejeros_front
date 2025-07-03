@@ -30,8 +30,6 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isDirty, setIsDirty] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (cat) {
@@ -70,28 +68,18 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
-
-    // Marcar el formulario como sucio al realizar cambios
-    setIsDirty(true);
   };
 
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.nombre.trim()) {
+    // Solo validamos el nombre como obligatorio cuando estamos creando un nuevo gato
+    if (!isEditing && !formData.nombre.trim()) {
       newErrors.nombre = 'El nombre es obligatorio';
     }
     
-    if (!formData.fechaNacimiento) {
-      newErrors.fechaNacimiento = 'La fecha de nacimiento es obligatoria';
-    }
+    // Los demás campos no son obligatorios
     
-    if (!formData.lugarRecogida.trim()) {
-      newErrors.lugarRecogida = 'El lugar de recogida es obligatorio';
-    }
-    
-    // Eliminamos la validación de anoLlegada para que no sea obligatorio
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,33 +98,16 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
       } else {
         await createCat(formData);
       }
-      setSaveSuccess(true);
-      // Retraso breve para mostrar el mensaje de éxito antes de regresar
-      setTimeout(() => {
-        onSuccess();
-      }, 1000);
+      onSuccess();
     } catch (error) {
       console.error('Error guardando el gato:', error);
-      setErrors({ submit: 'Ocurrió un error al guardar los cambios. Por favor, inténtalo de nuevo.' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCancel = () => {
-    // Confirmar antes de cancelar si hay cambios sin guardar
-    if (isDirty && !saveSuccess) {
-      const confirmCancel = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que deseas cancelar?');
-      if (!confirmCancel) {
-        return;
-      }
-    }
-    onCancel();
-  };
-
   const handlePhotosChange = (photos) => {
     setFormData(prev => ({ ...prev, fotos: photos }));
-    setIsDirty(true);
   };
 
   return (
@@ -146,7 +117,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
           {isEditing ? `Editar ${cat.nombre}` : 'Añadir Nuevo Gato'}
         </h1>
         <button
-          onClick={handleCancel}
+          onClick={onCancel}
           className="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
         >
           Cancelar
@@ -154,42 +125,39 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Columna izquierda - Fotos */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Fotos</h3>
-              <PhotoManager 
-                catId={cat?.id}
-                catName={formData.nombre}
-                photos={formData.fotos}
-                onPhotosChange={handlePhotosChange}
-              />
+        {/* Fotos - Ahora en la parte superior a toda la anchura */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Fotos</h3>
+          <PhotoManager 
+            catId={cat?.id}
+            photos={formData.fotos}
+            onPhotosChange={handlePhotosChange}
+          />
+        </div>
+        
+        {/* Información básica */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Información Básica</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Nombre {!isEditing && '*'}
+              </label>
+              {isEditing ? (
+                <p className="mt-2 text-gray-700 font-medium">{formData.nombre}</p>
+              ) : (
+                <input
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
+                    !isEditing && errors.nombre ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                />
+              )}
+              {!isEditing && errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
             </div>
-          </div>
-
-          {/* Columna derecha - Formulario */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Información básica */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Información Básica</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Nombre *
-                  </label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                    readOnly={isEditing} // Hacemos el campo no editable en modo edición
-                    className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.nombre ? 'border-red-300' : 'border-gray-300'
-                    } ${isEditing ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                  />
-                  {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
-                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -208,7 +176,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Fecha de Nacimiento *
+                    Fecha de Nacimiento {!isEditing && '*'}
                   </label>
                   <input
                     type="date"
@@ -216,15 +184,15 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
                     value={formData.fechaNacimiento}
                     onChange={handleInputChange}
                     className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.fechaNacimiento ? 'border-red-300' : 'border-gray-300'
+                      !isEditing && errors.fechaNacimiento ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
-                  {errors.fechaNacimiento && <p className="mt-1 text-sm text-red-600">{errors.fechaNacimiento}</p>}
+                  {!isEditing && errors.fechaNacimiento && <p className="mt-1 text-sm text-red-600">{errors.fechaNacimiento}</p>}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Año de Llegada
+                    Año de Llegada {!isEditing && '*'}
                   </label>
                   <input
                     type="date"
@@ -232,15 +200,15 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
                     value={formData.anoLlegada}
                     onChange={handleInputChange}
                     className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.anoLlegada ? 'border-red-300' : 'border-gray-300'
+                      !isEditing && errors.anoLlegada ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
-                  {errors.anoLlegada && <p className="mt-1 text-sm text-red-600">{errors.anoLlegada}</p>}
+                  {!isEditing && errors.anoLlegada && <p className="mt-1 text-sm text-red-600">{errors.anoLlegada}</p>}
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Lugar de Recogida *
+                    Lugar de Recogida {!isEditing && '*'}
                   </label>
                   <input
                     type="text"
@@ -248,10 +216,10 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
                     value={formData.lugarRecogida}
                     onChange={handleInputChange}
                     className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
-                      errors.lugarRecogida ? 'border-red-300' : 'border-gray-300'
+                      !isEditing && errors.lugarRecogida ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
-                  {errors.lugarRecogida && <p className="mt-1 text-sm text-red-600">{errors.lugarRecogida}</p>}
+                  {!isEditing && errors.lugarRecogida && <p className="mt-1 text-sm text-red-600">{errors.lugarRecogida}</p>}
                 </div>
               </div>
             </div>
@@ -423,28 +391,12 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
         {/* Botones de acción */}
         <div className="flex justify-end space-x-4 pt-6">
-          {/* Mensaje de éxito */}
-          {saveSuccess && (
-            <div className="mr-auto px-4 py-2 bg-green-100 text-green-800 rounded-md">
-              {isEditing ? 'Gato actualizado correctamente.' : 'Gato creado correctamente.'}
-            </div>
-          )}
-          
-          {/* Error de envío general */}
-          {errors.submit && (
-            <div className="mr-auto px-4 py-2 bg-red-100 text-red-800 rounded-md">
-              {errors.submit}
-            </div>
-          )}
-          
           <button
             type="button"
-            onClick={handleCancel}
+            onClick={onCancel}
             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
           >
             Cancelar

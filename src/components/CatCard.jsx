@@ -1,13 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { calculateAge } from '../utils/constants';
 import { useLanguage } from '../context/LanguageContext';
+import catService from '../services/catService';
 
 const CatCard = ({ cat, onViewDetail }) => {
   const age = calculateAge(cat.fechaNacimiento);
-  const mainPhoto = cat.fotos && cat.fotos.length > 0 ? cat.fotos[0] : null;
-  const { t } = useLanguage();
-  const [imageError, setImageError] = useState(false);
+  const [mainPhoto, setMainPhoto] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const { t } = useLanguage();
+  
+  // Cargar foto del gato desde el bucket cuando se renderiza el componente
+  useEffect(() => {
+    // Solo intentar cargar foto si tenemos un nombre de gato
+    if (cat && cat.nombre) {
+      const loadCatPhoto = async () => {
+        try {
+          // Intentamos obtener la foto principal del bucket
+          const photoUrl = await catService.getMainPhotoFromBucket(cat.nombre);
+          
+          // Verificar si la URL contiene ".emptyFolderPlaceholder" (esto no es una imagen real)
+          if (photoUrl && !photoUrl.includes('.emptyFolderPlaceholder')) {
+            console.log(`Intentando cargar imagen para ${cat.nombre}: ${photoUrl}`);
+            setMainPhoto(photoUrl);
+          } else if (cat.fotos && cat.fotos.length > 0) {
+            // Si no hay foto en el bucket o es un placeholder, usar la primera foto del array
+            const validPhotos = cat.fotos.filter(url => !url.includes('.emptyFolderPlaceholder'));
+            if (validPhotos.length > 0) {
+              setMainPhoto(validPhotos[0]);
+            } else {
+              setImageError(true);
+            }
+          } else {
+            setImageError(true);
+          }
+        } catch (error) {
+          console.error(`Error al cargar imagen para el gato ${cat.nombre}:`, error);
+          setImageError(true);
+        }
+      };
+      
+      loadCatPhoto();
+    }
+  }, [cat.nombre, cat.fotos]);
+
+  const handleImageLoad = () => {
+    console.log(`Imagen cargada correctamente para ${cat.nombre}`);
+    setImageLoaded(true);
+  };
+
+  const handleImageError = () => {
+    console.error(`Error al cargar imagen para el gato ${cat.nombre}: ${mainPhoto}`);
+    setImageError(true);
+    setMainPhoto(null);
+  };
 
   const getStatusBadges = () => {
     const badges = [];
@@ -21,38 +67,6 @@ const CatCard = ({ cat, onViewDetail }) => {
     return badges;
   };
 
-  const handleImageError = () => {
-    console.log(`Error al cargar imagen para el gato ${cat.nombre}: ${mainPhoto}`);
-    setImageError(true);
-  };
-
-  const handleImageLoad = () => {
-    console.log(`Imagen cargada correctamente para ${cat.nombre}`);
-    setImageLoaded(true);
-  };
-
-  // Verificamos si hay una URL de foto al inicio
-  useEffect(() => {
-    // Reiniciar estado cuando cambia la foto
-    setImageLoaded(false);
-    setImageError(false);
-    
-    if (mainPhoto) {
-      console.log(`Intentando cargar imagen para ${cat.nombre}: ${mainPhoto}`);
-      // Creamos un objeto Image para precargar y verificar la imagen
-      const img = new Image();
-      img.onload = handleImageLoad;
-      img.onerror = handleImageError;
-      
-      // Añadir timestamp para evitar caché si es una URL de Supabase
-      const photoUrl = mainPhoto.includes('supabase') 
-        ? `${mainPhoto}?t=${new Date().getTime()}` 
-        : mainPhoto;
-        
-      img.src = photoUrl;
-    }
-  }, [cat.id, cat.nombre, mainPhoto]);
-
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
       {/* Foto */}
@@ -61,9 +75,9 @@ const CatCard = ({ cat, onViewDetail }) => {
           <img
             src={mainPhoto}
             alt={cat.nombre}
-            className={`w-full h-full object-cover ${!imageLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-200'}`}
-            onError={handleImageError}
+            className="w-full h-full object-cover"
             onLoad={handleImageLoad}
+            onError={handleImageError}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -80,6 +94,7 @@ const CatCard = ({ cat, onViewDetail }) => {
           }`}>
             {cat.sexo ? t('catForm.male') : t('catForm.female')}
           </span>
+   
         </div>
       </div>
 
@@ -90,7 +105,7 @@ const CatCard = ({ cat, onViewDetail }) => {
             {cat.nombre}
           </h3>
           <span className="text-sm text-gray-500">
-            {cat.fechaNacimiento}
+            {age}
           </span>
         </div>
 

@@ -4,12 +4,19 @@ import { useLanguage } from '../context/LanguageContext';
 import CatCard from './CatCard';
 
 const CatList = ({ onViewDetail }) => {
-  const { filteredCats, loading, setSelectedCat } = useCats();
+  const { filteredCats, loading, loadCatById } = useCats();
   const { t } = useLanguage();
 
-  const handleViewDetail = (cat) => {
-    setSelectedCat(cat);
-    onViewDetail(cat);
+  const handleViewDetail = async (cat) => {
+    try {
+      // Cargar datos actualizados del gato seleccionado
+      const updatedCat = await loadCatById(cat.id);
+      onViewDetail(updatedCat);
+    } catch (error) {
+      console.error('Error al cargar el detalle del gato:', error);
+      // En caso de error, usar los datos que ya tenemos
+      onViewDetail(cat);
+    }
   };
 
   if (loading) {

@@ -82,9 +82,7 @@ export const es = {
     availableForAdoption: 'Disponible para adopción',
     manageAdoptions: 'Gestionar solicitudes',
     manageAdoptionApplications: 'Función para gestionar solicitudes de adopción en desarrollo',
-    viewAdoptionDetails: 'Función para ver detalles de adopción en desarrollo',
-    photo: 'foto',
-    photos: 'fotos'
+    viewAdoptionDetails: 'Función para ver detalles de adopción en desarrollo'
   },
   catForm: {
     newCat: 'Nuevo gato',
@@ -137,26 +135,7 @@ export const es = {
     setAsMain: 'Establecer como principal',
     dragAndDrop: 'Arrastra y suelta tus fotos aquí',
     or: 'o',
-    browseFiles: 'Buscar archivos',
-    noPhotos: 'No hay fotos disponibles',
-    uploadPhotos: 'Añadir fotos',
-    addMorePhotos: 'Añadir más fotos',
-    addByUrl: 'Añadir por URL',
-    enterImageUrl: 'Introduce la URL de la imagen',
-    confirmDeletePhoto: '¿Estás seguro de que quieres eliminar esta foto?',
-    photoDeleted: 'Foto eliminada correctamente',
-    photoDeletedUIOnly: 'Foto eliminada de la interfaz, pero hubo un problema con el storage',
-    errorDeletingPhoto: 'Error al eliminar la foto',
-    photoAdded: 'Foto añadida correctamente',
-    uploadingPhotos: 'Subiendo fotos...',
-    uploadSuccess: 'Fotos subidas correctamente',
-    uploadPartialError: 'Algunas fotos no pudieron ser subidas',
-    uploadError: 'Error al subir las fotos',
-    photoAddedTemporarily: 'Foto añadida temporalmente. Se subirá al guardar el gato',
-    processingUrl: 'Procesando URL...',
-    urlUploadSuccess: 'Imagen de URL subida correctamente',
-    urlUploadError: 'No se pudo subir la imagen desde la URL',
-    urlProcessError: 'Error al procesar la URL de la imagen'
+    browseFiles: 'Buscar archivos'
   },
   userManagement: {
     title: 'Gestión de Usuarios',
