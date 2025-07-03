@@ -31,11 +31,15 @@ export const LanguageProvider = ({ children }) => {
 
   // Obtener las traducciones para el idioma actual
   const t = (key) => {
+    if (!key) return ''; // Manejar el caso de clave vacía
+    
     const keys = key.split('.');
     let translation = translations[language];
     
+    if (!translation) return key; // Verificar que el idioma existe
+    
     for (const k of keys) {
-      if (!translation[k]) return key; // Retornar la clave si no existe la traducción
+      if (!translation || !translation[k]) return key; // Verificación adicional para cada nivel
       translation = translation[k];
     }
     

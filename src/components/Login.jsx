@@ -7,7 +7,9 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading, error: authError } = useAuth();
-  const { t } = useLanguage();
+  const languageContext = useLanguage();
+  // Asegurarse de que t sea una función, incluso si languageContext es undefined
+  const t = languageContext?.t || (key => key);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

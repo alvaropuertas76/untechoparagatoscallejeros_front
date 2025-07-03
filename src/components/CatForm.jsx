@@ -30,6 +30,8 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isDirty, setIsDirty] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (cat) {
@@ -68,6 +70,9 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
+
+    // Marcar el formulario como sucio al realizar cambios
+    setIsDirty(true);
   };
 
   const validateForm = () => {
@@ -85,9 +90,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
       newErrors.lugarRecogida = 'El lugar de recogida es obligatorio';
     }
     
-    if (!formData.anoLlegada) {
-      newErrors.anoLlegada = 'El año de llegada es obligatorio';
-    }
+    // Eliminamos la validación de anoLlegada para que no sea obligatorio
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -107,16 +110,33 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
       } else {
         await createCat(formData);
       }
-      onSuccess();
+      setSaveSuccess(true);
+      // Retraso breve para mostrar el mensaje de éxito antes de regresar
+      setTimeout(() => {
+        onSuccess();
+      }, 1000);
     } catch (error) {
       console.error('Error guardando el gato:', error);
+      setErrors({ submit: 'Ocurrió un error al guardar los cambios. Por favor, inténtalo de nuevo.' });
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCancel = () => {
+    // Confirmar antes de cancelar si hay cambios sin guardar
+    if (isDirty && !saveSuccess) {
+      const confirmCancel = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que deseas cancelar?');
+      if (!confirmCancel) {
+        return;
+      }
+    }
+    onCancel();
+  };
+
   const handlePhotosChange = (photos) => {
     setFormData(prev => ({ ...prev, fotos: photos }));
+    setIsDirty(true);
   };
 
   return (
@@ -126,7 +146,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
           {isEditing ? `Editar ${cat.nombre}` : 'Añadir Nuevo Gato'}
         </h1>
         <button
-          onClick={onCancel}
+          onClick={handleCancel}
           className="px-4 py-2 text-gray-600 hover:text-gray-800 transition"
         >
           Cancelar
@@ -141,6 +161,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
               <h3 className="text-lg font-medium text-gray-900 mb-4">Fotos</h3>
               <PhotoManager 
                 catId={cat?.id}
+                catName={formData.nombre}
                 photos={formData.fotos}
                 onPhotosChange={handlePhotosChange}
               />
@@ -162,9 +183,10 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleInputChange}
+                    readOnly={isEditing} // Hacemos el campo no editable en modo edición
                     className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
                       errors.nombre ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    } ${isEditing ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   />
                   {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
                 </div>
@@ -202,7 +224,7 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Año de Llegada *
+                    Año de Llegada
                   </label>
                   <input
                     type="date"
@@ -406,9 +428,23 @@ const CatForm = ({ cat, onSuccess, onCancel }) => {
 
         {/* Botones de acción */}
         <div className="flex justify-end space-x-4 pt-6">
+          {/* Mensaje de éxito */}
+          {saveSuccess && (
+            <div className="mr-auto px-4 py-2 bg-green-100 text-green-800 rounded-md">
+              {isEditing ? 'Gato actualizado correctamente.' : 'Gato creado correctamente.'}
+            </div>
+          )}
+          
+          {/* Error de envío general */}
+          {errors.submit && (
+            <div className="mr-auto px-4 py-2 bg-red-100 text-red-800 rounded-md">
+              {errors.submit}
+            </div>
+          )}
+          
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
           >
             Cancelar

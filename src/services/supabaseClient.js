@@ -28,13 +28,42 @@ if (isBrowser) {
 console.log('Inicializando Supabase con URL:', supabaseUrl);
 console.log('Usando clave de Supabase (primeros 10 caracteres):', supabaseKey ? supabaseKey.substring(0, 10) + '...' : 'No disponible');
 
-// Crear el cliente de Supabase con opciones mínimas
+// Crear el cliente de Supabase con opciones adecuadas para garantizar que se envíen las credenciales en todas las solicitudes
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true
-  }
+  },
+  global: {
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`
+    }
+  },
+  // Configuración específica para Storage
+  storageKey: supabaseKey
 });
+
+// Verificar la conexión después de inicializar
+async function checkConnection() {
+  try {
+    console.log('Verificando conexión a Supabase...');
+    const { data, error } = await supabase
+      .from('cat')
+      .select('count(*)', { count: 'exact' });
+      
+    if (error) {
+      console.error('Error al verificar conexión a Supabase:', error);
+    } else {
+      console.log('Conexión a Supabase verificada. Resultado:', data);
+    }
+  } catch (err) {
+    console.error('Error al verificar conexión a Supabase:', err);
+  }
+}
+
+// Ejecutar la verificación
+checkConnection();
 
 // Agregar método de utilidad para obtener la URL
 supabase.getUrl = () => supabaseUrl;

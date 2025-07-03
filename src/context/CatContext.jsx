@@ -1,12 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// Importar el servicio de mock en lugar del servicio real para desarrollo
-import { mockCatService as catService } from '../services/mockCatService';
+// Importar el servicio real que usa Supabase
+import catService from '../services/catService';
 
 const CatContext = createContext();
-
-// NOTA TEMPORAL: Este contexto está utilizando datos mockados
-// Cuando la integración con Supabase esté lista, cambiar la importación
-// de mockCatService de vuelta a catService real
 
 export const useCats = () => {
   const context = useContext(CatContext);
@@ -31,7 +27,9 @@ export const CatProvider = ({ children }) => {
   const loadCats = async () => {
     setLoading(true);
     try {
+      console.log('Iniciando carga de gatos desde el contexto...');
       const data = await catService.getAllCats();
+      console.log('Datos recibidos en el contexto:', data);
       setCats(data);
       setFilteredCats(data);
     } catch (err) {

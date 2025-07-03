@@ -82,7 +82,9 @@ export const de = {
     availableForAdoption: 'Verfügbar für Adoption',
     manageAdoptions: 'Anträge verwalten',
     manageAdoptionApplications: 'Funktion zur Verwaltung von Adoptionsanträgen in Entwicklung',
-    viewAdoptionDetails: 'Funktion zur Anzeige von Adoptionsdetails in Entwicklung'
+    viewAdoptionDetails: 'Funktion zur Anzeige von Adoptionsdetails in Entwicklung',
+    photo: 'Foto',
+    photos: 'Fotos'
   },
   catForm: {
     newCat: 'Neue Katze',
@@ -135,7 +137,26 @@ export const de = {
     setAsMain: 'Als Hauptbild festlegen',
     dragAndDrop: 'Ziehen Sie Ihre Fotos hierher',
     or: 'oder',
-    browseFiles: 'Dateien durchsuchen'
+    browseFiles: 'Dateien durchsuchen',
+    noPhotos: 'Keine Fotos verfügbar',
+    uploadPhotos: 'Fotos hinzufügen',
+    addMorePhotos: 'Weitere Fotos hinzufügen',
+    addByUrl: 'Per URL hinzufügen',
+    enterImageUrl: 'Geben Sie die Bild-URL ein',
+    confirmDeletePhoto: 'Sind Sie sicher, dass Sie dieses Foto löschen möchten?',
+    photoDeleted: 'Foto erfolgreich gelöscht',
+    photoDeletedUIOnly: 'Foto aus der Benutzeroberfläche entfernt, aber es gab ein Problem mit dem Speicher',
+    errorDeletingPhoto: 'Fehler beim Löschen des Fotos',
+    photoAdded: 'Foto erfolgreich hinzugefügt',
+    uploadingPhotos: 'Fotos werden hochgeladen...',
+    uploadSuccess: 'Fotos erfolgreich hochgeladen',
+    uploadPartialError: 'Einige Fotos konnten nicht hochgeladen werden',
+    uploadError: 'Fehler beim Hochladen der Fotos',
+    photoAddedTemporarily: 'Foto vorübergehend hinzugefügt. Es wird beim Speichern der Katze hochgeladen',
+    processingUrl: 'URL wird verarbeitet...',
+    urlUploadSuccess: 'Bild von URL erfolgreich hochgeladen',
+    urlUploadError: 'Bild von URL konnte nicht hochgeladen werden',
+    urlProcessError: 'Fehler bei der Verarbeitung der Bild-URL'
   },
   userManagement: {
     title: 'Benutzerverwaltung',

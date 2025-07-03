@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { calculateAge } from '../utils/constants';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -6,6 +6,8 @@ const CatCard = ({ cat, onViewDetail }) => {
   const age = calculateAge(cat.fechaNacimiento);
   const mainPhoto = cat.fotos && cat.fotos.length > 0 ? cat.fotos[0] : null;
   const { t } = useLanguage();
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const getStatusBadges = () => {
     const badges = [];
@@ -19,15 +21,49 @@ const CatCard = ({ cat, onViewDetail }) => {
     return badges;
   };
 
+  const handleImageError = () => {
+    console.log(`Error al cargar imagen para el gato ${cat.nombre}: ${mainPhoto}`);
+    setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    console.log(`Imagen cargada correctamente para ${cat.nombre}`);
+    setImageLoaded(true);
+  };
+
+  // Verificamos si hay una URL de foto al inicio
+  useEffect(() => {
+    // Reiniciar estado cuando cambia la foto
+    setImageLoaded(false);
+    setImageError(false);
+    
+    if (mainPhoto) {
+      console.log(`Intentando cargar imagen para ${cat.nombre}: ${mainPhoto}`);
+      // Creamos un objeto Image para precargar y verificar la imagen
+      const img = new Image();
+      img.onload = handleImageLoad;
+      img.onerror = handleImageError;
+      
+      // Añadir timestamp para evitar caché si es una URL de Supabase
+      const photoUrl = mainPhoto.includes('supabase') 
+        ? `${mainPhoto}?t=${new Date().getTime()}` 
+        : mainPhoto;
+        
+      img.src = photoUrl;
+    }
+  }, [cat.id, cat.nombre, mainPhoto]);
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
       {/* Foto */}
       <div className="h-48 bg-gray-200 relative">
-        {mainPhoto ? (
+        {mainPhoto && !imageError ? (
           <img
             src={mainPhoto}
             alt={cat.nombre}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${!imageLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-200'}`}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -38,7 +74,7 @@ const CatCard = ({ cat, onViewDetail }) => {
         )}
         
         {/* Badge de sexo */}
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
             cat.sexo ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'
           }`}>
@@ -54,7 +90,7 @@ const CatCard = ({ cat, onViewDetail }) => {
             {cat.nombre}
           </h3>
           <span className="text-sm text-gray-500">
-            {age}
+            {cat.fechaNacimiento}
           </span>
         </div>
 

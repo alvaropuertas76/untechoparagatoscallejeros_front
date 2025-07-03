@@ -82,7 +82,9 @@ export const en = {
     availableForAdoption: 'Available for adoption',
     manageAdoptions: 'Manage applications',
     manageAdoptionApplications: 'Adoption applications management function in development',
-    viewAdoptionDetails: 'Adoption details viewing function in development'
+    viewAdoptionDetails: 'Adoption details viewing function in development',
+    photo: 'photo',
+    photos: 'photos'
   },
   catForm: {
     newCat: 'New Cat',
@@ -135,7 +137,26 @@ export const en = {
     setAsMain: 'Set as main',
     dragAndDrop: 'Drag and drop your photos here',
     or: 'or',
-    browseFiles: 'Browse files'
+    browseFiles: 'Browse files',
+    noPhotos: 'No photos available',
+    uploadPhotos: 'Add photos',
+    addMorePhotos: 'Add more photos',
+    addByUrl: 'Add by URL',
+    enterImageUrl: 'Enter the image URL',
+    confirmDeletePhoto: 'Are you sure you want to delete this photo?',
+    photoDeleted: 'Photo successfully deleted',
+    photoDeletedUIOnly: 'Photo removed from UI, but there was a storage issue',
+    errorDeletingPhoto: 'Error deleting photo',
+    photoAdded: 'Photo successfully added',
+    uploadingPhotos: 'Uploading photos...',
+    uploadSuccess: 'Photos uploaded successfully',
+    uploadPartialError: 'Some photos could not be uploaded',
+    uploadError: 'Error uploading photos',
+    photoAddedTemporarily: 'Photo temporarily added. It will be uploaded when saving the cat',
+    processingUrl: 'Processing URL...',
+    urlUploadSuccess: 'Image from URL uploaded successfully',
+    urlUploadError: 'Could not upload image from URL',
+    urlProcessError: 'Error processing image URL'
   },
   userManagement: {
     title: 'User Management',

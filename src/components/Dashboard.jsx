@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCats } from '../context/CatContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,6 +15,22 @@ const Dashboard = () => {
   const { t } = useLanguage();
   const { hasPermission } = usePermissions();
   const [currentView, setCurrentView] = useState('list'); // 'list', 'detail', 'create', 'edit'
+  const [basePath, setBasePath] = useState('');
+
+  // Determinar la ruta base según la URL actual
+  useEffect(() => {
+    // Detectar si estamos en GitHub Pages o en desarrollo local
+    const host = window.location.hostname;
+    const path = window.location.pathname.split('/');
+    
+    if (host.includes('github.io') && path.length > 1) {
+      // Estamos en GitHub Pages, la ruta base es '/{repo}/'
+      setBasePath(`/${path[1]}/`);
+    } else {
+      // Estamos en desarrollo local, la ruta base es '/'
+      setBasePath('/');
+    }
+  }, []);
 
   const handleViewChange = (view, cat = null) => {
     setCurrentView(view);
@@ -40,7 +56,7 @@ const Dashboard = () => {
             {/* Zona izquierda - Logo y nombre */}
             <div className="flex items-center space-x-3">
               <img 
-                src="/assets/images/Logo_grau_mit-deutsch-300x176.jpg" 
+                src={`${basePath}assets/images/Logo_grau_mit-deutsch-300x176.jpg`} 
                 alt="Logo Un Techo Para Gatos Callejeros" 
                 className="h-14 w-auto"
               />

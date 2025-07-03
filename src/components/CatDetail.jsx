@@ -8,7 +8,8 @@ import { useLanguage } from '../context/LanguageContext';
 const CatDetail = ({ onEdit, onBack }) => {
   const { selectedCat, deleteCat } = useCats();
   const { hasPermission } = usePermissions();
-  const { t } = useLanguage();
+  const languageContext = useLanguage();
+  const t = languageContext?.t || (key => key);
 
   if (!selectedCat) {
     return (
@@ -100,18 +101,29 @@ const CatDetail = ({ onEdit, onBack }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Columna izquierda - Fotos */}
-        <div className="lg:col-span-1">
-          <PhotoManager 
-            catId={cat.id} 
-            photos={cat.fotos || []} 
-            readOnly={!hasPermission('canManagePhotos')} 
-          />
+      <div className="space-y-6">
+        {/* Sección de fotos - Carrusel grande */}
+        <div className="w-full">
+          <div className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.photos')}</h2>
+            <div className="max-w-3xl mx-auto">
+              <PhotoManager 
+                catId={cat.id} 
+                catName={cat.nombre}
+                photos={cat.fotos || []} 
+                readOnly={!hasPermission('canManagePhotos')} 
+              />
+              {cat.fotos && cat.fotos.length > 0 && (
+                <p className="text-sm text-gray-500 mt-2 text-center">
+                  {cat.fotos.length} {cat.fotos.length === 1 ? t('catDetail.photo') : t('catDetail.photos')}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Columna derecha - Información */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Información - Grid de dos columnas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Información básica */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('catDetail.basicInfo')}</h2>
@@ -162,29 +174,7 @@ const CatDetail = ({ onEdit, onBack }) => {
                 }`}>
                   {cat.castrado ? t('searchFilters.yes') : t('searchFilters.no')}
                 </span>
-              </div>
-              
-              {/* Sección de información de salud adicional solo visible para veterinarios */}
-              <RequirePermission permission="canManageHealth">
-                <div className="col-span-2 mt-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded p-4">
-                    <h3 className="text-sm font-bold text-blue-800 mb-2">{t('catDetail.healthNotes')}</h3>
-                    {cat.notasSalud ? (
-                      <p className="text-sm text-blue-700">{cat.notasSalud}</p>
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm text-blue-700">{t('catDetail.noHealthNotes')}</p>
-                        <button 
-                          className="text-xs px-2 py-1 bg-blue-600 text-white rounded"
-                          onClick={() => alert(t('catDetail.addHealthNotesAlert'))}
-                        >
-                          {t('catDetail.addHealthNotes')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </RequirePermission>
+              </div> 
             </div>
           </div>
 
@@ -224,36 +214,7 @@ const CatDetail = ({ onEdit, onBack }) => {
                   </span>
                 </div>
               )}
-              
-              {/* Controles de adopción - solo para usuarios con permisos de adopción */}
-              <RequirePermission permission="canApproveAdoptions">
-                <div className="col-span-2 mt-4">
-                  <div className="bg-green-50 border border-green-200 rounded p-4">
-                    <h3 className="text-sm font-bold text-green-800 mb-2">{t('catDetail.adoptionProcess')}</h3>
-                    {cat.adoptado ? (
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm text-green-700">{t('catDetail.alreadyAdopted')}</p>
-                        <button 
-                          className="text-xs px-2 py-1 bg-yellow-600 text-white rounded"
-                          onClick={() => alert(t('catDetail.viewAdoptionDetails'))}
-                        >
-                          {t('catDetail.viewAdoptionDetails')}
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm text-green-700">{t('catDetail.availableForAdoption')}</p>
-                        <button 
-                          className="text-xs px-2 py-1 bg-green-600 text-white rounded"
-                          onClick={() => alert(t('catDetail.manageAdoptionApplications'))}
-                        >
-                          {t('catDetail.manageAdoptions')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </RequirePermission>
+
             </div>
           </div>
 
